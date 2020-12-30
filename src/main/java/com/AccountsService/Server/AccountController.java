@@ -22,9 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AccountController {
 
-	String senderAccountNotFoundexceptionMassage = "There isn´t any transfer for sender Id : ";
-	String receiverAccountNotFoundexceptionMassage = "There isn´t any transfer for receiver Id : ";
-
+	private String senderAccountNotFoundexceptionMassage = "There isn´t any transfer for sender Id : ";
+	private String receiverAccountNotFoundexceptionMassage = "There isn´t any transfer for receiver Id : ";
 	private final AccountRepository repository;
 	private final TransferRepository transferRepository;
 
@@ -47,18 +46,12 @@ public class AccountController {
 	public
 	Account newAccount(@RequestBody AccountAux newAccountAux) {// account aux pq p json nao controi o MONEY
 
-		// validate, si for false nao pode fazer post de saldo negativo
-//		if(newAccount.isTreasury()==false) {
-//			
-//			
-//		}
 		Money money = Money.of(newAccountAux.getMoney(), newAccountAux.getCurrency().getCurrencyCode());
 		Account newAccount = new Account();
 		newAccount.setId(newAccountAux.getId());
 		newAccount.setCurrency(newAccountAux.getCurrency());
 		newAccount.setName(newAccountAux.getName());
 		newAccount.setTreasury(newAccountAux.isTreasury());
-
 		newAccount.setMoney(money);
 
 		return repository.save(newAccount);
@@ -94,21 +87,10 @@ public class AccountController {
 
 	@PostMapping("/account/{id}/transfer")
 	Transfer accountTransfer(@RequestBody Transfer newTransfer, @PathVariable int id) {
-//subtraçao em diferentes currency
-		// se mudar o currency muda o saldo???
-		
-		
-		
 		return repository.findById(id).map(account -> {
 			newTransfer.getMoney().abs();
 			Money moneyTransfer = Money.of(newTransfer.getMoney(), account.getCurrency().getCurrencyCode());// currency
-
-					
-			
 			if (!(account.getMoney().subtract(moneyTransfer)).isNegative()) {
-
-				
-
 				return repository.findById(newTransfer.getReceivingAccountid())
 					.map(receivingAccount -> {
 						if(receivingAccount.getMoney().getCurrency().equals(moneyTransfer.getCurrency())) {
@@ -124,21 +106,13 @@ public class AccountController {
 							newTransfer.setSendingAccountid(id);
 							transferRepository.save(newTransfer);
 						}
-
 					return newTransfer;
-
-					
-					
 				}).orElseThrow(() -> new NotFoundException(newTransfer.getReceivingAccountid(),
 						"Receiving Account not found"));
-
 			} else {
 				if (account.isTreasury()) {
-					
-
 					repository.findById(newTransfer.getReceivingAccountid())
 					.map(receivingAccount -> {
-						
 						if(receivingAccount.getMoney().getCurrency().equals(moneyTransfer.getCurrency())) {
 							account.setMoney(account.getMoney().subtract(moneyTransfer));
 							receivingAccount.setMoney(receivingAccount.getMoney().add(moneyTransfer));
@@ -152,27 +126,18 @@ public class AccountController {
 							newTransfer.setSendingAccountid(id);
 							transferRepository.save(newTransfer);
 						}
-
-						
-
 						return newTransfer;
 					}).orElseThrow(() -> new NotFoundException(newTransfer.getReceivingAccountid(),
 							"Receiving Account not found"));
-
 				} else {
 					newTransfer.setStatus("No Balance for Transfer, your balance is : " + account.getMoney());
 					newTransfer.setSendingAccountid(id);
 					transferRepository.save(newTransfer);
-					
 				}
-
 			}
-
 			return newTransfer;
-
 		})
 				.orElseThrow(() -> new NotFoundException(id, "Account not found"));
-
 	}
 
 	@DeleteMapping("/account/{id}")
@@ -208,9 +173,5 @@ public class AccountController {
 		return transferRepository.findByReceivingAccountid(id)
 				.orElseThrow(() -> new NotFoundException(receiverAccountNotFoundexceptionMassage + id));
 	}
-	
-	// unit e compond test//git hub
-	// readme
-// exepxtion de transfeer 
 
 }

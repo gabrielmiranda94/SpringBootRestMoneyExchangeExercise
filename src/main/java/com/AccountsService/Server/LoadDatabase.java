@@ -36,10 +36,7 @@ public class LoadDatabase {
 	  
 	  @Bean
 	  CommandLineRunner initDatabase2(TransferRepository transferRepository) {
-			//atomic int
-			
 	    return args -> {
-	      
 	      log.info("Preloading " + transferRepository.save(new Transfer(5,1,2,money,"")));
 	    };
 	  }

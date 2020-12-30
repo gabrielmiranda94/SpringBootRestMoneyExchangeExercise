@@ -40,23 +40,17 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @SpringBootTest
 public class AccountControllerIntegrationTest {
 	
-	AccountRepository repository;
-	TransferRepository transferRepository;
-	
 
-    @Autowired
-     AccountRepository genericAccountyRepository;
+			@Autowired
+			AccountRepository genericAccountyRepository;
     
-    @Autowired
-    TransferRepository genericTransferRepository;
+			@Autowired
+			TransferRepository genericTransferRepository;
 
 	
-    @Autowired
-	    AccountController aController;
+			@Autowired
+			AccountController aController;
 	     
-	    
-	    @Mock
-	    TransferRepository tr;
 	    
 	    @Test
 	    public void testFindAll() 
@@ -79,11 +73,9 @@ public class AccountControllerIntegrationTest {
 
 	        Account result = aController.newAccount(aAux);
 	        
-	        
 	        assertEquals(result, aController.one(1));
 	        assertEquals(a, genericAccountyRepository.save(a));
 
-	        
 	     }
 	    
 	   
@@ -91,37 +83,10 @@ public class AccountControllerIntegrationTest {
 	    @Test
 	    public void testAccountTransfer() {
 	    	
-	    	
-	    	
-	    	Currency cur = Currency.getInstance("CHF");
-			Currency curEUR = Currency.getInstance("EUR");
-			BigDecimal  money = new BigDecimal("10.03");
-			Number n = 2;
-			Money moneyCHF = Money.of(100, cur.getCurrencyCode());
-			Money moneyEUR = Money.of(100, curEUR.getCurrencyCode());
-	        Account a = new Account(1,"Gabriel",cur,moneyCHF,true);
-	        Account a2 = new Account(2,"Mario",cur,moneyCHF,true);
-
-//	        ar.save(a);
-//	        ar.save(a2);
-//	    	
-//	        genericAccountyRepository.save(a);
-//	        genericAccountyRepository.save(a2);
-
-	    	
-	        Transfer t = new Transfer(5,1,2,money,"");
-
-//	        Mockito.when(tr.save(t)).thenReturn(t);
-//	        Mockito.verify(tr).save(t);
-	        
-	        
+		   BigDecimal  money = new BigDecimal("10.03");
+	       Transfer t = new Transfer(5,1,2,money,"");
 	       Transfer result = aController.accountTransfer(t, 1);
-	       Transfer t2 = aController.transferByTransferId(5);
 	       assertEquals(t,result);
-//	       assertEquals(result,aController.transferByTransferId(1));
-	      
-	        
-	    	
 	    	
 	    }
 	    

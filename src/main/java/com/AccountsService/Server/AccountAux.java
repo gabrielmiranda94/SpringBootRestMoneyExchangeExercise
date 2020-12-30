@@ -13,17 +13,10 @@ public class AccountAux {
 	@Id
 	@GeneratedValue
 	private int id;
-
 	private String name;
-	// private Currency currency;
 	private Currency currency;
-
-	// private Money money;
-	@Lob
-	// @JsonProperty("amountOfMoney")
-
+	//@Lob
 	private BigDecimal money;
-
 	private boolean treasury;
 
 	public AccountAux() {

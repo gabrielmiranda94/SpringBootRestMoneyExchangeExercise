@@ -16,12 +16,9 @@ public class Transfer {
 
 	@Id
 	@GeneratedValue
-	
 	private int id;
-
 	private int sendingAccountid;
 	private int receivingAccountid;
-	// @Lob
 	private BigDecimal money;
 	private String status;
 

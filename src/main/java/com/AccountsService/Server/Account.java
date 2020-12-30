@@ -28,19 +28,11 @@ public class Account {
 
 	@Id
 	@GeneratedValue
-	
 	private int id;
-
 	private String name;
-	// private Currency currency;
 	private Currency currency;
-
-	// private Money money;
 	@Lob
-	// @JsonProperty("amountOfMoney")
-
 	private Money money;
-
 	private boolean treasury;
 
 	public Account() {
