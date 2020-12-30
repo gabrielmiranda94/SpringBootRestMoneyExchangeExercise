@@ -46,13 +46,14 @@ public class AccountControllerIntegrationTest {
 
     @Autowired
      AccountRepository genericAccountyRepository;
+    
+    @Autowired
+    TransferRepository genericTransferRepository;
 
 	
     @Autowired
 	    AccountController aController;
 	     
-	    @Mock
-	    AccountRepository ar;
 	    
 	    @Mock
 	    TransferRepository tr;
@@ -60,25 +61,8 @@ public class AccountControllerIntegrationTest {
 	    @Test
 	    public void testFindAll() 
 	    {
-	    	Currency cur = Currency.getInstance("CHF");
-			Currency curEUR = Currency.getInstance("EUR");
-			BigDecimal  money = new BigDecimal("10.03");
-			Number n = 2;
-			Money moneyCHF = Money.of(100, cur.getCurrencyCode());
-			Money moneyEUR = Money.of(100, curEUR.getCurrencyCode());
-	        // given
-	        Account a = new Account(1,"Gabriel",cur,moneyCHF,true);
-	        ar.save(a);
-	        List<Account> l = new ArrayList<Account>();
-	        l.add(a);
-	          
-	        Mockito.when(ar.findAll()).thenReturn(l);	        
-	      
-	        
 	        List<Account> result = aController.all();
-	     
 	        assertEquals(result.size(), 4);
-	      //  assertEquals(result, l);
 	      }
 	    
 	    @Test
@@ -90,23 +74,16 @@ public class AccountControllerIntegrationTest {
 			Number n = 2;
 			Money moneyCHF = Money.of(100, cur.getCurrencyCode());
 			Money moneyEUR = Money.of(100, curEUR.getCurrencyCode());
-	        // given
 	        Account a = new Account(1,"Gabriel",cur,moneyCHF,true);
 	        AccountAux aAux = new AccountAux(1,"Gabriel",cur,money,true);
 
-	        ar.save(a);
-	        List<Account> l = new ArrayList<Account>();
-	        l.add(a);
-	        
-	        MockHttpServletRequest request = new MockHttpServletRequest();
-	        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-	         
-	        Mockito.when(ar.save(a)).thenReturn(a);
-	        
 	        Account result = aController.newAccount(aAux);
-	         
-	      
-	        Mockito.verify(ar).save(a);
+	        
+	        
+	        assertEquals(result, aController.one(1));
+	        assertEquals(a, genericAccountyRepository.save(a));
+
+	        
 	     }
 	    
 	   
@@ -125,22 +102,25 @@ public class AccountControllerIntegrationTest {
 	        Account a = new Account(1,"Gabriel",cur,moneyCHF,true);
 	        Account a2 = new Account(2,"Mario",cur,moneyCHF,true);
 
-	        ar.save(a);
-	        ar.save(a2);
-	    	
-	        genericAccountyRepository.save(a);
-	        genericAccountyRepository.save(a2);
+//	        ar.save(a);
+//	        ar.save(a2);
+//	    	
+//	        genericAccountyRepository.save(a);
+//	        genericAccountyRepository.save(a2);
 
 	    	
-	        Transfer t = new Transfer(1,1,2,money,"");
+	        Transfer t = new Transfer(5,1,2,money,"");
 
-	        Mockito.when(tr.save(t)).thenReturn(t);
+//	        Mockito.when(tr.save(t)).thenReturn(t);
+//	        Mockito.verify(tr).save(t);
+	        
 	        
 	       Transfer result = aController.accountTransfer(t, 1);
-	         
-	        assertEquals(tr.save(t), t);
+	       Transfer t2 = aController.transferByTransferId(5);
+	       assertEquals(t,result);
+//	       assertEquals(result,aController.transferByTransferId(1));
 	      
-	        Mockito.verify(tr).save(t);
+	        
 	    	
 	    	
 	    }
