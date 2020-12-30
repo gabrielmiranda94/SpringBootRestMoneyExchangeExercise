@@ -15,23 +15,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class LoadDatabase {
 	
-	  private static final org.slf4j.Logger log =  LoggerFactory.getLogger(LoadDatabase.class);
-	  		  private final AtomicLong counter = new AtomicLong();
-
+			private static final org.slf4j.Logger log =  LoggerFactory.getLogger(LoadDatabase.class);
 			Currency cur = Currency.getInstance("CHF");
 			Currency curEUR = Currency.getInstance("EUR");
 			BigDecimal  money = new BigDecimal("10.03");
 			Number n = 2;
 			Money moneyCHF = Money.of(100, cur.getCurrencyCode());
 			Money moneyEUR = Money.of(100, curEUR.getCurrencyCode());
-			
-			
-			
-			
 	  @Bean
 	  CommandLineRunner initDatabase(AccountRepository repository,TransferRepository transferRepository) {
-			//atomic int
-			
 	    return args -> {
 	    	
 	      log.info("Preloading " + repository.save(new Account(1,"Gabriel",cur,moneyCHF,true)));
@@ -48,7 +40,7 @@ public class LoadDatabase {
 			
 	    return args -> {
 	      
-	      log.info("Preloading " + transferRepository.save(new Transfer(1,1,2,money,"")));
+	      log.info("Preloading " + transferRepository.save(new Transfer(5,1,2,money,"")));
 	    };
 	  }
 }

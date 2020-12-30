@@ -35,14 +35,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-@ExtendWith(MockitoExtension.class)
+
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class AccountControllerIntegrationTest {
 	
 	AccountRepository repository;
 	TransferRepository transferRepository;
 	
-	 @InjectMocks
+
+    @Autowired
+     AccountRepository genericAccountyRepository;
+
+	
+    @Autowired
 	    AccountController aController;
 	     
 	    @Mock
@@ -71,8 +77,8 @@ public class AccountControllerIntegrationTest {
 	        
 	        List<Account> result = aController.all();
 	     
-	        assertEquals(result.size(), 1);
-	        assertEquals(result, l);
+	        assertEquals(result.size(), 4);
+	      //  assertEquals(result, l);
 	      }
 	    
 	    @Test
@@ -109,30 +115,32 @@ public class AccountControllerIntegrationTest {
 	    public void testAccountTransfer() {
 	    	
 	    	
+	    	
 	    	Currency cur = Currency.getInstance("CHF");
 			Currency curEUR = Currency.getInstance("EUR");
 			BigDecimal  money = new BigDecimal("10.03");
 			Number n = 2;
 			Money moneyCHF = Money.of(100, cur.getCurrencyCode());
 			Money moneyEUR = Money.of(100, curEUR.getCurrencyCode());
-	        // given
 	        Account a = new Account(1,"Gabriel",cur,moneyCHF,true);
 	        Account a2 = new Account(2,"Mario",cur,moneyCHF,true);
 
 	        ar.save(a);
 	        ar.save(a2);
 	    	
-	        
+	        genericAccountyRepository.save(a);
+	        genericAccountyRepository.save(a2);
+
 	    	
 	        Transfer t = new Transfer(1,1,2,money,"");
 
 	        Mockito.when(tr.save(t)).thenReturn(t);
 	        
-	  //     Transfer result = aController.accountTransfer(t, 1);
+	       Transfer result = aController.accountTransfer(t, 1);
 	         
 	        assertEquals(tr.save(t), t);
 	      
-	       // Mockito.verify(tr).save(t);
+	        Mockito.verify(tr).save(t);
 	    	
 	    	
 	    }
